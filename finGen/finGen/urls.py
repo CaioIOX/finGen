@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .views import CategoriaList, CategoriaDetail, DespesaList, DespesaDetail, ReceitaList, ReceitaDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('categorias/', CategoriaList.as_view(), name='categoria-list'),
+    path('categorias/<int:pk>/', CategoriaDetail.as_view(), name='categoria-detail'),
+    path('despesas/', DespesaList.as_view(), name='despesa-list'),
+    path('despesas/<int:pk>/', DespesaDetail.as_view(), name='despesa-detail'),
+    path('receitas/', ReceitaList.as_view(), name='receita-list'),
+    path('receitas/<int:pk>/', ReceitaDetail.as_view(), name='receita-detail')
 ]
