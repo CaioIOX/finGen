@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import CategoriaList, CategoriaDetail, DespesaList, DespesaDetail, ReceitaList, ReceitaDetail
+from .views import CategoriaList, CategoriaDetail, DespesaList, DespesaDetail, ReceitaList, ReceitaDetail, UserList, UserDetails
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     path('despesas/', DespesaList.as_view(), name='despesa-list'),
     path('despesas/<int:pk>/', DespesaDetail.as_view(), name='despesa-detail'),
     path('receitas/', ReceitaList.as_view(), name='receita-list'),
-    path('receitas/<int:pk>/', ReceitaDetail.as_view(), name='receita-detail')
+    path('receitas/<int:pk>/', ReceitaDetail.as_view(), name='receita-detail'),
+    path('users', UserList.as_view(), name='user-list'),
+    path('users/<int:pk>/', UserDetails.as_view(), name='user-detail')
 ]

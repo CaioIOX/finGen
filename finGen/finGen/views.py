@@ -1,6 +1,7 @@
 from rest_framework import generics
+from django.contrib.auth.models import User
 from .models import Categoria, Despesa, Receita
-from .serializers import CategoriaSerializer, DespesaSerializer, ReceitaSerializer
+from .serializers import CategoriaSerializer, DespesaSerializer, ReceitaSerializer, UserSerializer
 
 class CategoriaList(generics.ListCreateAPIView):
     queryset = Categoria.objects.all()
@@ -25,3 +26,11 @@ class ReceitaList(generics.ListCreateAPIView):
 class ReceitaDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Receita.objects.all()
     serializer_class = ReceitaSerializer
+
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetails(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
