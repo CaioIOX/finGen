@@ -1,31 +1,34 @@
 import '../App.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getCategories, getExpenses } from '../services/api';
 
-function DespesaList() {
-  const [despesas, setDespesas] = useState([]);
+function ExpenseList() {
+  const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:7000/despesas/')
-      .then(response => {
-        setDespesas(response.data.results);
-        console.log(response.data.results)
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+    async function fetchData() {
+      const expensesData = await getExpenses();
+      setExpenses(expensesData.results);
 
+      const categoriesData = await getCategories();
+      setCategories(categoriesData);
+    }
+    fetchData();
+  }, []);
+    
   return (
     <div>
       <h2>Lista de despesas</h2>
       <ul>
-        {despesas.map(Despesa => (
-          <li key={Despesa.id}>Despesa: {Despesa.descricao} - Categoria: {Despesa.categoria.nome} - Valor: R$ {Despesa.valor}</li>
+        {expenses.map(Despesa => (
+          <><li key={Despesa.id}>Despesa: {Despesa.descricao} </li>
+            <li key={Despesa.id}>Categoria: {Despesa.categoria.nome} </li>
+            <li key={Despesa.id}>Valor: R$ {Despesa.valor} </li></>
         ))}
       </ul>
     </div>
   );
 }
 
-export default DespesaList;
+export default ExpenseList;
