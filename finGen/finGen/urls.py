@@ -26,6 +26,6 @@ urlpatterns = [
     path('despesas/<int:pk>/', DespesaDetail.as_view(), name='despesa-detail'),
     path('receitas/', ReceitaList.as_view(), name='receita-list'),
     path('receitas/<int:pk>/', ReceitaDetail.as_view(), name='receita-detail'),
-    path('users', UserList.as_view(), name='user-list'),
+    path('users/', UserList.as_view(), name='user-list'),
     path('users/<int:pk>/', UserDetails.as_view(), name='user-detail')
 ]
