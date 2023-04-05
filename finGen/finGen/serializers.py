@@ -9,20 +9,14 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DespesaSerializer(serializers.ModelSerializer):
-    categoria = categoria = serializers.SlugRelatedField(
-        queryset=Categoria.objects.all(),
-        slug_field='id'
-    )
+    categoria = CategoriaSerializer()
 
     class Meta:
         model = Despesa
         fields = '__all__'
 
 class ReceitaSerializer(serializers.ModelSerializer):
-    categoria = categoria = serializers.SlugRelatedField(
-        queryset=Categoria.objects.all(),
-        slug_field='id'
-    )
+    categoria = CategoriaSerializer()
 
     class Meta:
         model = Receita
