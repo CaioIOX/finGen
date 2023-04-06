@@ -13,8 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
-
 import { getOneUser, login } from '../services/api';
+import Dashboard from './Dashboard';
 
 function Copyright(props) {
   return (
@@ -89,10 +89,12 @@ export default function SignIn() {
             <Button
               type="submit"
               fullWidth
+              href='/dashboard'
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Entrar
+               Entrar
+
             </Button>
             <Grid container>
               <Grid item xs>

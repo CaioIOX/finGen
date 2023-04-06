@@ -1,23 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import SignIn from './pages/SignIn';
+import AppRoutes from './services/AppRoutes';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const dashboard = ReactDOM.createRoot(document.getElementById('dashboard'))
 root.render(
 
-    <SignIn />
-  
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+
 );
-dashboard.render(<dashboard/>);
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
