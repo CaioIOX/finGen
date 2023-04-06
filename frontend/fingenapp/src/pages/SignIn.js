@@ -12,6 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Cookies from 'js-cookie';
+
+import { getOneUser, login } from '../services/api';
 
 function Copyright(props) {
   return (
@@ -26,13 +29,18 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      user: data.get('user'),
+    const token = await login({
+      username: data.get('user'),
       password: data.get('password'),
-    });
+    })
+    
+    Cookies.set('token', token.access);
+
+    window.location.replace('/dashboard');
+
   };
 
   return (
@@ -60,7 +68,7 @@ export default function SignIn() {
               fullWidth
               id="user"
               label="Usuário"
-              name="email"
+              name="user"
               autoComplete="email"
               autoFocus
             />
@@ -88,7 +96,7 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="" variant="body2">
                   Esqueceu a senha?
                 </Link>
               </Grid>

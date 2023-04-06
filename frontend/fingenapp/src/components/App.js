@@ -8,10 +8,10 @@ function ExpenseList() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(request) {
       const expensesData = await getExpenses();
       setExpenses(expensesData.results);
-
+   
       const categoriesData = await getCategories();
       setCategories(categoriesData);
     }
