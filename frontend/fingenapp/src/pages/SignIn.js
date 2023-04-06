@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -30,31 +32,56 @@ const theme = createTheme();
 export default function SignIn() {
   const [error, setError] = useState(null);
 
+  // Verifica se há user ou senha nos cookies para carregar nos campos
+  window.addEventListener('load', () => {
+  const user = Cookies.get('user');
+  const password = Cookies.get('password');
+  const rememberMe = Cookies.get('rememberMe');
+    
+  if (user && password && rememberMe === 'true') {
+    // Preenche automaticamente os campos com os valores salvos nos cookies
+    document.getElementById('user').value = user;
+    document.getElementById('password').value = password;
+    document.getElementById('rememberMe').checked = true;
+  }
+});
+
+  // O que acontece ao apertar enter
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
     const data = new FormData(event.currentTarget);
+    const inputUser = data.get('user');
+    const inputPassword = data.get('password');
 
     var token = null;
     var user = null;
+    if (document.getElementById('rememberMe').checked) {
+      rememberMe(inputUser, inputPassword);
+    }
 
     try {
       token = await login({
-        username: data.get('user'),
-        password: data.get('password'),
+        username: inputUser,
+        password: inputPassword,
       })
+    } catch (error) {
+      console.log(error.response.status)
+      setError(error.message);
+      if (error.response.status === 400) {
+        setError('Os campos de usuário e senha precisam estar preenchidos.');
+      }
+      if (error.response.status === 401) {
+        setError('Acesso negado.')
+      }
 
       user = await userLogin({
-        username: data.get('user'),
-        password: data.get('password'),
+        username: inputUser,
+        password: inputPassword,
       });
-    } catch (error) {
-      console.log(error)
-      setError(error.message);
       
       return ;
     }
-
+    
     Cookies.set('token', token.access);
 
   };
@@ -99,7 +126,8 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              
+              control={<Checkbox id="rememberMe" value="remember" color="primary" />}
               label="Lembre de mim"
             />
             <Button
@@ -112,7 +140,7 @@ export default function SignIn() {
                Entrar
 
             </Button>
-                          {error && (
+              {error && (
                 <Snackbar open={error != null} autoHideDuration={6000} onClose={() => setError(null)}>
                   <Alert severity="error" onClose={() => setError(null)}>
                     {error}
@@ -120,11 +148,6 @@ export default function SignIn() {
                 </Snackbar>
               )}
             <Grid container>
-              <Grid item xs>
-                <Link href="" variant="body2">
-                  Esqueceu a senha?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
                   {"Não possui uma conta? Cadastre-se"}
@@ -137,4 +160,11 @@ export default function SignIn() {
       </Container>
     </ThemeProvider>
   );
+}
+
+export function rememberMe(user, password) {
+  const rememberMe = true;
+  Cookies.set('user', user);
+  Cookies.set('password', password);
+  Cookies.set('rememberMe', rememberMe);
 }

@@ -45,8 +45,6 @@ class ReceitaDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReceitaSerializer
 
 class UserList(generics.ListCreateAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
