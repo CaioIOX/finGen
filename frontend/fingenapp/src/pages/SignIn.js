@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,8 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
-import { getOneUser, login } from '../services/api';
-import Dashboard from './Dashboard';
+import { userLogin, login } from '../services/api';
 
 function Copyright(props) {
   return (
@@ -29,17 +28,34 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const [error, setError] = useState(null);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const token = await login({
-      username: data.get('user'),
-      password: data.get('password'),
-    })
     
-    Cookies.set('token', token.access);
+    const data = new FormData(event.currentTarget);
 
-    window.location.replace('/dashboard');
+    var token = null;
+    var user = null;
+
+    try {
+      token = await login({
+        username: data.get('user'),
+        password: data.get('password'),
+      })
+
+      user = await userLogin({
+        username: data.get('user'),
+        password: data.get('password'),
+      });
+    } catch (error) {
+      console.log(error)
+      setError(error.message);
+      
+      return ;
+    }
+
+    Cookies.set('token', token.access);
 
   };
 
@@ -89,13 +105,20 @@ export default function SignIn() {
             <Button
               type="submit"
               fullWidth
-              href='/dashboard'
+             
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
                Entrar
 
             </Button>
+                          {error && (
+                <Snackbar open={error != null} autoHideDuration={6000} onClose={() => setError(null)}>
+                  <Alert severity="error" onClose={() => setError(null)}>
+                    {error}
+                  </Alert>
+                </Snackbar>
+              )}
             <Grid container>
               <Grid item xs>
                 <Link href="" variant="body2">

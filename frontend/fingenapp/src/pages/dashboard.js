@@ -21,6 +21,11 @@ import { mainListItems, secondaryListItems } from '../components/ListItem';
 import Chart from '../components/Chart';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
+import { getOneUser, userLogin } from '../services/api';
+
+function teste() {
+  const user = userLogin()
+}
 
 function Copyright(props) {
   return (

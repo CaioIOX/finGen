@@ -9,6 +9,11 @@ export const login = async (credentials) => {
     return response.data;
 }
 
+export const userLogin = async (credentials) => {
+    const response = await axios.post(`${API_BASE_URL}/user/`, credentials, { headers: { Authorization: `Bearer ${token}` } })
+    return response.data;
+}
+
 export const getOneUser = async(userData) => {
     const response = await axios.get(`${API_BASE_URL}/users/${userData.id}`, userData, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
