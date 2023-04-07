@@ -17,13 +17,15 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from '../components/ListItem';
+import { mainListItems } from '../components/ListItem';
 import Chart from '../components/Chart';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
+import Cookies from 'js-cookie';
 import { getOneUser, userLogin } from '../services/api';
+import { ListItemButton } from '@mui/material';
 
-function teste() {
+function getUser() {
   const user = userLogin()
 }
 
@@ -31,7 +33,7 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -116,15 +118,16 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
+            <ListItemButton
+              component="h2"
               variant="h6"
+              href="/dashboard"
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
             >
               Dashboard
-            </Typography>
+            </ListItemButton>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -149,7 +152,6 @@ function DashboardContent() {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
           </List>
         </Drawer>
         <Box

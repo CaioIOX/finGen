@@ -36,13 +36,11 @@ export default function SignIn() {
   window.addEventListener('load', () => {
   const user = Cookies.get('user');
   const password = Cookies.get('password');
-  const rememberMe = Cookies.get('rememberMe');
     
   if (user && password && rememberMe === 'true') {
     // Preenche automaticamente os campos com os valores salvos nos cookies
     document.getElementById('user').value = user;
     document.getElementById('password').value = password;
-    document.getElementById('rememberMe').checked = true;
   }
 });
 
@@ -57,6 +55,9 @@ export default function SignIn() {
     var user = null;
     if (document.getElementById('rememberMe').checked) {
       rememberMe(inputUser, inputPassword);
+    } else {
+      Cookies.remove('user');
+      Cookies.remove('password');
     }
 
     try {
@@ -133,7 +134,7 @@ export default function SignIn() {
             <Button
               type="submit"
               fullWidth
-             
+              href="/dashboard"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -163,8 +164,6 @@ export default function SignIn() {
 }
 
 export function rememberMe(user, password) {
-  const rememberMe = true;
   Cookies.set('user', user);
   Cookies.set('password', password);
-  Cookies.set('rememberMe', rememberMe);
 }
