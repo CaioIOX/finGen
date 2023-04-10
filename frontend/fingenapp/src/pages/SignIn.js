@@ -16,6 +16,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
 import { userLogin, login } from '../services/api';
+import { Routes, Route } from 'react-router-dom';
+import Dashboard from "../pages/dashboard";
+
 
 function Copyright(props) {
   return (
@@ -47,7 +50,7 @@ export default function SignIn() {
   // O que acontece ao apertar enter
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const data = new FormData(event.currentTarget); 
     const inputUser = data.get('user');
     const inputPassword = data.get('password');
 
@@ -65,8 +68,8 @@ export default function SignIn() {
         username: inputUser,
         password: inputPassword,
       })
+      
     } catch (error) {
-      console.log(error.response.status)
       setError(error.message);
       if (error.response.status === 400) {
         setError('Os campos de usuário e senha precisam estar preenchidos.');
@@ -75,16 +78,20 @@ export default function SignIn() {
         setError('Acesso negado.')
       }
 
-      user = await userLogin({
-        username: inputUser,
-        password: inputPassword,
-      });
-      
-      return ;
+      return
     }
-    
-    Cookies.set('token', token.access);
 
+    user = await userLogin({
+      username: inputUser,
+      password: inputPassword,
+    });
+        
+    Cookies.set('token', token.access);
+    return (
+      <Routes>
+            <Route path="/dashboard" element={<Dashboard/>} />
+        </Routes>
+    );
   };
 
   return (
@@ -103,7 +110,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Login
+            Cadastro
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -134,7 +141,6 @@ export default function SignIn() {
             <Button
               type="submit"
               fullWidth
-              href="/dashboard"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -150,7 +156,7 @@ export default function SignIn() {
               )}
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/SignUp" variant="body2">
                   {"Não possui uma conta? Cadastre-se"}
                 </Link>
               </Grid>
