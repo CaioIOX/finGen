@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import $ from 'jquery';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Cookies from 'js-cookie';
 import { userLogin, login } from '../services/api';
@@ -42,8 +43,8 @@ export default function SignIn() {
     
   if (user && password && rememberMe === 'true') {
     // Preenche automaticamente os campos com os valores salvos nos cookies
-    document.getElementById('user').value = user;
-    document.getElementById('password').value = password;
+    $('#user').val(user);
+    $('#password').val(password);
   }
 });
 
@@ -56,7 +57,7 @@ export default function SignIn() {
 
     var token = null;
     var user = null;
-    if (document.getElementById('rememberMe').checked) {
+    if ($('#rememberMe').is(":checked")) {
       rememberMe(inputUser, inputPassword);
     } else {
       Cookies.remove('user');
@@ -75,7 +76,7 @@ export default function SignIn() {
         setError('Os campos de usuário e senha precisam estar preenchidos.');
       }
       if (error.response.status === 401) {
-        setError('Acesso negado.')
+        setError('Acesso negado.');
       }
 
       return

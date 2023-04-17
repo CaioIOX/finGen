@@ -15,12 +15,12 @@ export const userLogin = async (credentials) => {
 }
 
 export const getOneUser = async(userData) => {
-    const response = await axios.get(`${API_BASE_URL}/users/${userData.id}`, userData, { headers: { Authorization: `Bearer ${token}` } });
+    const response = await axios.get(`${API_BASE_URL}/users/${userData.id}`, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
 }
 
-export const createUser = async () => {
-    const response = await axios.post(`${API_BASE_URL}/users/`, { headers: { Authorization: `Bearer ${token}` } });
+export const createUser = async (userData) => {
+    const response = await axios.post(`${API_BASE_URL}/users/`, userData);
     return response.data;
 }
 
@@ -35,7 +35,7 @@ export const getCategories = async () => {
 };
 
 export const createCategorie = async (categorieData) => {
-    const response = await axios.post(`${API_BASE_URL}/categorias/`, { headers: { Authorization: `Bearer ${token}` } });
+    const response = await axios.post(`${API_BASE_URL}/categorias/`, categorieData, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
 };
 
@@ -60,7 +60,7 @@ export const getOneExpense = async (expenseId) => {
 }
 
 export const createExpense = async (expenseData) => {
-    const response = await axios.post(`${API_BASE_URL}/depesas/`, { headers: { Authorization: `Bearer ${token}` } });
+    const response = await axios.post(`${API_BASE_URL}/depesas/`, expenseData, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
 }
 
@@ -85,7 +85,7 @@ export const getOneRevenue = async (revenueId) => {
 }
 
 export const createRevenue = async (revenueData) => {
-    const response = await axios.post(`${API_BASE_URL}/receitas/`, { headers: { Authorization: `Bearer ${token}` } });
+    const response = await axios.post(`${API_BASE_URL}/receitas/`, revenueData, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
 }
 

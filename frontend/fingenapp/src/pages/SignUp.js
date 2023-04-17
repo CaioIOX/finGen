@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,11 +7,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import $ from 'jquery'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createUser } from '../services/api';
 
 function Copyright(props) {
     return (
@@ -26,17 +30,42 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const [error, setError] = useState(null);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const inputUser = data.get('username');
     const inputEmail = data.get('email');
     const inputPassword = data.get('password');
+    const inputFirstName = data.get('firstName');
+    const inputLastName = data.get('lastName');
+
+    if (!$('#accessTerms').is(":checked")) {
+      setError('Você precisa aceitar os termos da convenção de genebra.');  
+      return;
+    }
+
+    if (!inputUser || !inputEmail || !inputPassword || !inputFirstName || !inputLastName) {
+      setError('Todos os campos precisam estar preenchidos.');
+      return;
+    }
     
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    try {
+      var user = createUser({
+        username: inputUser,
+        password: inputPassword,
+        email: inputEmail,
+        first_name: inputFirstName,
+        last_name: inputLastName
+      });
+    } catch(error) {
+      setError('Falha ao tentar cadastrar');
+      console.log(error);
+      return;
+    }
+    console.log(user);
+    
   };
 
   return (
@@ -113,8 +142,8 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" required/>}
-                  label="Concordo com os termos de acesso."
+                  control={<Checkbox id ="accessTerms" value="allowAccessTerms" color="primary" required/>}
+                  label="Li e aceito as convenções de genebra."
                 />
               </Grid>
             </Grid>
@@ -126,6 +155,13 @@ export default function SignUp() {
             >
               Cadastrar
             </Button>
+            {error && (
+                <Snackbar open={error != null} autoHideDuration={6000} onClose={() => setError(null)}>
+                  <Alert severity="error" onClose={() => setError(null)}>
+                    {error}
+                  </Alert>
+                </Snackbar>
+              )}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/" variant="body2">
