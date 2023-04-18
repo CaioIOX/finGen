@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getExpenses, getRevenues } from '../services/api';
 import Title from './Title';
 
@@ -26,7 +26,6 @@ function useGetExpenses() {
 function useGetRevenue() {
   const [revenue, setRevenue] = useState([]);
   var totalRevenue = 0;
-  var date = [];
 
   useEffect(() => {
     async function fetchData(request) {
@@ -38,15 +37,15 @@ function useGetRevenue() {
   
   for (let i = 0; i< revenue.length; i++) {
     totalRevenue += parseInt(revenue[i].valor)
-    date = [revenue[i].data];
   }
 
-  return {totalRevenue, date};
+  return totalRevenue;
 }
 
 // Generate Sales Data
-function createData(balance, date) {
-  return { balance, date };
+function createData(revenue, expenses) {
+  const balance = revenue - expenses;
+  return { revenue, expenses, balance } ;
 }
 
 export default function Chart() {
@@ -54,53 +53,32 @@ export default function Chart() {
   
   const revenue = useGetRevenue();
   const expenses = useGetExpenses();
-  const balance = revenue.totalRevenue - expenses;
-  const date = revenue.date;
 
-  const data = [  createData(balance, date)];
+  const data = [  createData(revenue, expenses) ];
 
   return (
     <React.Fragment>
       <Title>Receita x Despesas</Title>
       <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
+      <BarChart 
+        width={150} 
+        height={40} 
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
         >
-          <XAxis
-            dataKey="date"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          >
-            <Label
-              angle={270}
-              position="left"
-              style={{
-                textAnchor: 'middle',
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
-            >
-              Sales ($)
-            </Label>
-          </YAxis>
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="balance"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
-        </LineChart>
+          <Bar name="Saldo" dataKey="balance" fill="#8884d8" barSize={50} />
+          <Bar name="Receita" dataKey="revenue" fill="#00FF00" barSize={50} />
+          <Bar name="Despesas" dataKey="expenses" fill="#FF0000" barSize={50} />
+          <Tooltip  separator=': R$ ' />
+          <XAxis values="Gráfico" hide="true" />
+          <YAxis />
+          <Legend />
+        </BarChart>
       </ResponsiveContainer>
     </React.Fragment>
   );
