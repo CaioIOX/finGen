@@ -91,10 +91,10 @@ export default function SignIn() {
     }
     Cookies.set('token', token.access);
     
-    user = await userLogin({
-      username: inputUser,
-      password: inputPassword,
-    });
+   // user = await userLogin({
+   //   username: inputUser,
+  //    password: inputPassword,
+  //  });
         
     
     return (

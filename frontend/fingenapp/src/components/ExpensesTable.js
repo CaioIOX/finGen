@@ -15,6 +15,7 @@ var rows = [];
 function createData(id, categoriaNome, descricao, data, valor) {
   return { id, categoriaNome, descricao, data, valor };
 }
+
 function GetExpensesList() {
   const [expenses, setExpenses] = useState([]);
   rows = [];

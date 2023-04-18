@@ -24,6 +24,7 @@ import Loading from '../components/Loading';
 import Cookies from 'js-cookie';
 import { getOneUser, userLogin } from '../services/api';
 import { ListItemButton } from '@mui/material';
+import StickyFooter from '../components/StickyFooter';
 
 function getUser() {
   const user = userLogin()
@@ -106,8 +107,8 @@ function DashboardContent() {
       {isLoading ? (
         <Loading />
       ) : (
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline /><AppBar position="absolute" open={open}>
+      <><Box sx={{ display: 'flex' }}>
+            <CssBaseline /><AppBar position="absolute" open={open}>
               <Toolbar
                 sx={{
                   pr: '24px', // keep right padding when drawer closed
@@ -142,74 +143,75 @@ function DashboardContent() {
                 </IconButton>
               </Toolbar>
             </AppBar><Drawer variant="permanent" open={open}>
-                <Toolbar
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    px: [1],
-                  }}
-                >
-                  <IconButton onClick={toggleDrawer}>
-                    <ChevronLeftIcon />
-                  </IconButton>
-                </Toolbar>
-                <Divider />
-                <List component="nav">
-                  {mainListItems}
-                  <Divider sx={{ my: 1 }} />
-                </List>
-              </Drawer><Box
-                component="main"
+              <Toolbar
                 sx={{
-                  backgroundColor: (theme) => theme.palette.mode === 'light'
-                    ? theme.palette.grey[100]
-                    : theme.palette.grey[900],
-                  flexGrow: 1,
-                  height: '100vh',
-                  overflow: 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
                 }}
               >
-                <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                  <Grid container spacing={3}>
-                    {/* Chart */}
-                    <Grid item xs={12} md={8} lg={9}>
-                      <Paper
-                        sx={{
-                          p: 2,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          height: 240,
-                        }}
-                      >
-                        <Chart />
-                      </Paper>
-                    </Grid>
-                    {/* Recent Deposits */}
-                    <Grid item xs={12} md={4} lg={3}>
-                      <Paper
-                        sx={{
-                          p: 2,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          height: 240,
-                        }}
-                      >
-                        <Deposits />
-                      </Paper>
-                    </Grid>
-                    {/* Recent Expenses */}
-                    <Grid item xs={12}>
-                      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                        <ExpensesTable />
-                      </Paper>
-                    </Grid>
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <List component="nav">
+                {mainListItems}
+                <Divider sx={{ my: 1 }} />
+              </List>
+            </Drawer><Box
+              component="main"
+              sx={{
+                backgroundColor: (theme) => theme.palette.mode === 'light'
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+                flexGrow: 1,
+                height: '100vh',
+                overflow: 'auto',
+              }}
+            >
+              <Toolbar />
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  {/* Chart */}
+                  <Grid item xs={12} md={8} lg={9}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
+                      }}
+                    >
+                      <Chart />
+                    </Paper>
                   </Grid>
-                  <Copyright sx={{ pt: 4 }} />
-                </Container>
-              </Box>
-      </Box>
+                  {/* Recent Deposits */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
+                      }}
+                    >
+                      <Deposits />
+                    </Paper>
+                  </Grid>
+                  {/* Recent Expenses */}
+                  <Grid item xs={12}>
+                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                      <ExpensesTable />
+                    </Paper>
+                  </Grid>
+                </Grid>
+                <Copyright sx={{ pt: 4 }} />
+              </Container>
+            </Box>
+
+          </Box><StickyFooter /></>
       )}
     </ThemeProvider>
   );
