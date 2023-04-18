@@ -13,14 +13,13 @@ import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems } from '../components/ListItem';
 import Chart from '../components/Chart';
 import Deposits from '../components/Deposits';
-import Orders from '../components/Orders';
+import ExpensesTable from '../components/ExpensesTable';
 import Loading from '../components/Loading';
 import Cookies from 'js-cookie';
 import { getOneUser, userLogin } from '../services/api';
@@ -33,10 +32,7 @@ function getUser() {
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="">
-        Your Website
-      </Link>{' '}
+      {'FinGen '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -134,7 +130,7 @@ function DashboardContent() {
                   variant="h6"
                   href="/dashboard"
                   color="inherit"
-                  noWrap
+                  nowrap="true"
                   sx={{ flexGrow: 1 }}
                 >
                   Dashboard
@@ -203,10 +199,10 @@ function DashboardContent() {
                         <Deposits />
                       </Paper>
                     </Grid>
-                    {/* Recent Orders */}
+                    {/* Recent Expenses */}
                     <Grid item xs={12}>
                       <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                        <Orders />
+                        <ExpensesTable />
                       </Paper>
                     </Grid>
                   </Grid>

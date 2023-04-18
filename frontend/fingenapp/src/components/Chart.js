@@ -1,31 +1,67 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { getExpenses, getRevenues } from '../services/api';
 import Title from './Title';
 
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount };
+function useGetExpenses() {
+  const [expenses, setExpenses] = useState([]);
+  var totalExpenses = 0;
+
+  useEffect(() => {
+    async function fetchData(request) {
+      const expensesData = await getExpenses();
+      setExpenses(expensesData.results);
+    }
+    fetchData();
+  }, []);
+  
+  for (let i = 0; i< expenses.length; i++) {
+    totalExpenses += parseInt(expenses[i].valor)
+  }
+
+  return totalExpenses;
 }
 
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
-];
+function useGetRevenue() {
+  const [revenue, setRevenue] = useState([]);
+  var totalRevenue = 0;
+  var date = [];
+
+  useEffect(() => {
+    async function fetchData(request) {
+      const revenueData = await getRevenues();
+      setRevenue(revenueData.results);
+    }
+    fetchData();
+  }, []);
+  
+  for (let i = 0; i< revenue.length; i++) {
+    totalRevenue += parseInt(revenue[i].valor)
+    date = [revenue[i].data];
+  }
+
+  return {totalRevenue, date};
+}
+
+// Generate Sales Data
+function createData(balance, date) {
+  return { balance, date };
+}
 
 export default function Chart() {
   const theme = useTheme();
+  
+  const revenue = useGetRevenue();
+  const expenses = useGetExpenses();
+  const balance = revenue.totalRevenue - expenses;
+  const date = revenue.date;
+
+  const data = [  createData(balance, date)];
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Receita x Despesas</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -37,7 +73,7 @@ export default function Chart() {
           }}
         >
           <XAxis
-            dataKey="time"
+            dataKey="date"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
@@ -60,7 +96,7 @@ export default function Chart() {
           <Line
             isAnimationActive={false}
             type="monotone"
-            dataKey="amount"
+            dataKey="balance"
             stroke={theme.palette.primary.main}
             dot={false}
           />

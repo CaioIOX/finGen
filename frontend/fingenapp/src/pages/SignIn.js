@@ -89,13 +89,14 @@ export default function SignIn() {
 
       return
     }
-
+    Cookies.set('token', token.access);
+    
     user = await userLogin({
       username: inputUser,
       password: inputPassword,
     });
         
-    Cookies.set('token', token.access);
+    
     return (
       <Routes>
             <Route path="/dashboard" element={<Dashboard/>} />
