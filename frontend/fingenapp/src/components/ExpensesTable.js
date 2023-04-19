@@ -72,15 +72,15 @@ export default function Orders() {
               </TableRow>
             ))}
           </TableBody>
-            ) : ( 
-              <TableBody>
-                <TableRow>
-                  <TableCell colSpan={4} align="center">Nenhuma despesa próxima!</TableCell>
-                </TableRow>
-              </TableBody>
-            )}
+        ) : ( 
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={4} align="center">Nenhuma despesa próxima!</TableCell>
+            </TableRow>
+          </TableBody>
+        )}
       </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+      <Link color="primary" href="/expensesList" onClick={preventDefault} sx={{ mt: 3 }}>
         Ver todas despesas
       </Link>
     </React.Fragment>

@@ -18,16 +18,6 @@ import Loading from '../components/Loading';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createUser } from '../services/api';
 
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'FinGen '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-}
-
 const theme = createTheme();
 
 export default function SignUp() {
@@ -174,7 +164,7 @@ export default function SignUp() {
                   </Grid>
                 </Grid>
               </Box>
-            </Box><Copyright sx={{ mt: 5 }} /></>
+            </Box></>
       )}
       </Container>
     </ThemeProvider>

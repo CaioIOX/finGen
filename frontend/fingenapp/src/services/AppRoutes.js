@@ -10,8 +10,8 @@ function AppRoutes() {
         <Routes>
             <Route path="/" element={<SignIn/>} exact/>
             <Route path="/signup" element={<SignUp/>} exact/>
-            <Route path="/dashboard" element={<Dashboard/>} />
-            <Route path="/expensesList" element={<ExpensesList/>} />
+            <Route path="/dashboard" element={<Dashboard/>} exact/>
+            <Route path="/expensesList" element={<ExpensesList/>} exact/>
         </Routes>
     )
 }

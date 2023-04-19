@@ -22,7 +22,7 @@ import ExpensesTable from '../components/ExpensesTable';
 import Loading from '../components/Loading';
 import Cookies from 'js-cookie';
 import { getOneUser, userLogin } from '../services/api';
-import { ListItemButton } from '@mui/material';
+import { ListItemButton, Pagination } from '@mui/material';
 import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -35,8 +35,13 @@ import { formataData } from '../components/App';
 import ListItem from '../components/ListItem';
 import StickyFooter from '../components/StickyFooter';
 
-
-var rows = [];
+var data ={
+  page: 1,
+  numberOfPages: 0,
+  nextPage: "",
+  previousPage: "",
+  results: []
+}
 
 // Generate Order Data
 function createData(id, categoriaNome, descricao, data, valor) {
@@ -44,18 +49,19 @@ function createData(id, categoriaNome, descricao, data, valor) {
 }
 
 function GetExpensesList() {
+  data.results = [];
   const [expenses, setExpenses] = useState([]);
-  rows = [];
   useEffect(() => {
     async function fetchData(request) {
       const expensesData = await getExpenses();
       setExpenses(expensesData.results);
+      data.numberOfPages = Math.ceil((expensesData.count)/(10));
     }
     fetchData();
   }, []);
   
   for (let i = 0; i< expenses.length; i++) {
-    rows.push(
+    data.results.push(
     createData(
         expenses[i].id,
         expenses[i].categoria.nome,
@@ -129,7 +135,8 @@ function ListOfExpenses() {
     setOpen(!open);
   };
     
-    GetExpensesList();
+   GetExpensesList();
+  
     return (
  <>
   <ThemeProvider theme={mdTheme}>
@@ -137,120 +144,127 @@ function ListOfExpenses() {
       <Loading />
     ) : (
       <><Box sx={{ display: "flex" }}>
-                            <CssBaseline />
-                            <AppBar position="absolute" open={open}>
-                                <Toolbar
-                                    sx={{
-                                        pr: "24px", // keep right padding when drawer closed
-                                    }}
-                                >
-                                    <IconButton
-                                        edge="start"
-                                        color="inherit"
-                                        aria-label="open drawer"
-                                        onClick={toggleDrawer}
-                                        sx={{
-                                            marginRight: "36px",
-                                            ...(open && { display: "none" }),
-                                        }}
-                                    >
-                                        <MenuIcon />
-                                    </IconButton>
-                                    <ListItemButton
-                                        component="h2"
-                                        variant="h6"
-                                        href="/dashboard"
-                                        color="inherit"
-                                        nowrap="true"
-                                        sx={{ flexGrow: 1 }}
-                                    >
-                                        Dashboard
-                                    </ListItemButton>
-                                    <IconButton color="inherit">
-                                        <Badge badgeContent={4} color="secondary">
-                                            <NotificationsIcon />
-                                        </Badge>
-                                    </IconButton>
-                                </Toolbar>
-                            </AppBar>
-                            <Drawer variant="permanent" open={open}>
-                                <Toolbar
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "flex-end",
-                                        px: [1],
-                                    }}
-                                >
-                                    <IconButton onClick={toggleDrawer}>
-                                        <ChevronLeftIcon />
-                                    </IconButton>
-                                </Toolbar>
-                                <Divider />
-                                <List component="nav">
-                                    {mainListItems}
-                                    <Divider sx={{ my: 1 }} />
-                                </List>
-                            </Drawer>
+        <CssBaseline />
+        <AppBar position="absolute" open={open}>
+            <Toolbar
+                sx={{
+                    pr: "24px", // keep right padding when drawer closed
+                }}
+            >
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={toggleDrawer}
+                    sx={{
+                        marginRight: "36px",
+                        ...(open && { display: "none" }),
+                    }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <ListItemButton
+                    component="h2"
+                    variant="h6"
+                    href="/dashboard"
+                    color="inherit"
+                    nowrap="true"
+                    sx={{ flexGrow: 1 }}
+                >
+                    Dashboard
+                </ListItemButton>
+                <IconButton color="inherit">
+                    <Badge badgeContent={4} color="secondary">
+                        <NotificationsIcon />
+                    </Badge>
+                </IconButton>
+            </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+            <Toolbar
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    px: [1],
+                }}
+            >
+                <IconButton onClick={toggleDrawer}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </Toolbar>
+            <Divider />
+            <List component="nav">
+                {mainListItems}
+                <Divider sx={{ my: 1 }} />
+            </List>
+        </Drawer>
+        <Box
+            component="main"
+            sx={{
+                backgroundColor: (theme) => theme.palette.mode === "light"
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[900],
+                flexGrow: 1,
+                height: "100vh",
+                overflow: "auto",
+            }}
+        >
+            <Toolbar />
+            <React.Fragment>
+                <Grid item xs="auto" md="auto" lg="auto">
+                    <Paper
+                        sx={{
+                            p: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "auto",
+                        }}
+                    >
+                        <Title>Próximas Despesas</Title>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Data</TableCell>
+                                    <TableCell>Descricao</TableCell>
+                                    <TableCell>Categoria</TableCell>
+                                    <TableCell align="right">Valor</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {data.results.length !== 0 ? (
+                                <><TableBody>
+                              {data.results.map((row) => (
+                                <TableRow key={row.id}>
+                                  <TableCell>{row.data}</TableCell>
+                                  <TableCell>{row.descricao}</TableCell>
+                                  <TableCell>{row.categoriaNome}</TableCell>
+                                  <TableCell align="right">{`R$ ${row.valor}`}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
                             <Box
-                                component="main"
-                                sx={{
-                                    backgroundColor: (theme) => theme.palette.mode === "light"
-                                        ? theme.palette.grey[100]
-                                        : theme.palette.grey[900],
-                                    flexGrow: 1,
-                                    height: "100vh",
-                                    overflow: "auto",
-                                }}
+                            sx={{
+                              marginTop: 5
+                            }}
                             >
-                                <Toolbar />
-                                <React.Fragment>
-                                    <Grid item xs={12} md={4} lg={3}>
-                                        <Paper
-                                            sx={{
-                                                p: 2,
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                height: 240,
-                                            }}
-                                        >
-                                            <Title>Próximas Despesas</Title>
-                                            <Table size="small">
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell>Data</TableCell>
-                                                        <TableCell>Descricao</TableCell>
-                                                        <TableCell>Categoria</TableCell>
-                                                        <TableCell align="right">Valor</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                {rows.length != 0 ? (
-                                                    <TableBody>
-                                                        {rows.map((row) => (
-                                                            <TableRow key={row.id}>
-                                                                <TableCell>{row.data}</TableCell>
-                                                                <TableCell>{row.descricao}</TableCell>
-                                                                <TableCell>{row.categoriaNome}</TableCell>
-                                                                <TableCell align="right">{`R$ ${row.valor}`}</TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                ) : (
-                                                    <TableBody>
-                                                        <TableRow>
-                                                            <TableCell colSpan={4} align="center">
-                                                                Nenhuma despesa próxima!
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    </TableBody>
-                                                )}
-                                            </Table>
-                                        </Paper>
-                                    </Grid>
-                                </React.Fragment>
-                            </Box>
-                        </Box><StickyFooter /></>         
-    )}
+                              <Pagination count={data.numberOfPages} variant="outlined" shape="rounded" />
+                            </Box></>
+                            ) : (
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell colSpan={4} align="center">
+                                            Nenhuma despesa próxima!
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            )}
+                        </Table>
+                    </Paper>
+                </Grid>
+            </React.Fragment>
+        </Box>
+    </Box><StickyFooter /></>         
+  )}
     </ThemeProvider>
     
 </>

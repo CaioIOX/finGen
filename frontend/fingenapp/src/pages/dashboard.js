@@ -30,16 +30,6 @@ function getUser() {
   const user = userLogin()
 }
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'FinGen '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -207,7 +197,6 @@ function DashboardContent() {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Copyright sx={{ pt: 4 }} />
               </Container>
             </Box>
 

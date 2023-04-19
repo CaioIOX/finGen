@@ -21,17 +21,6 @@ import { userLogin, login } from '../services/api';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from "../pages/dashboard";
 
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'FinGen '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
 export default function SignIn() {
@@ -170,7 +159,7 @@ export default function SignIn() {
                   </Grid>
                 </Grid>
               </Box>
-            </Box><Copyright sx={{ mt: 8, mb: 4 }} /></>
+            </Box></>
       )}
       </Container>
     </ThemeProvider>
