@@ -1,38 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { Link, useLocation } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import MuiAppBar from '@mui/material/AppBar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems } from '../components/ListItem';
-import Deposits from '../components/Deposits';
-import ExpensesTable from '../components/ExpensesTable';
 import Loading from '../components/Loading';
-import Cookies from 'js-cookie';
-import { getOneUser, userLogin } from '../services/api';
-import { ListItemButton, Pagination } from '@mui/material';
-import Link from '@mui/material/Link';
+import { ListItemButton, Pagination, PaginationItem } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '../components/Title';
-import { getExpenses } from '../services/api';
+import { getExpenses, getNextPageExpenses } from '../services/api';
 import { formataData } from '../components/App';
-import ListItem from '../components/ListItem';
 import StickyFooter from '../components/StickyFooter';
 
 var data ={
@@ -56,6 +49,7 @@ function GetExpensesList() {
       const expensesData = await getExpenses();
       setExpenses(expensesData.results);
       data.numberOfPages = Math.ceil((expensesData.count)/(10));
+      data.nextPage = expensesData.next;
     }
     fetchData();
   }, []);
@@ -119,11 +113,42 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+
+export const HandleNextPage = async () => {
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    async function fetchData(request) {
+      const nextPageData = await getNextPageExpenses(data.nextPage);
+      setExpenses(nextPageData.results);
+      data.numberOfPages = Math.ceil((nextPageData.count)/(10));
+      data.nextPage = nextPageData.next;
+    }
+    fetchData();
+  }, []);
+  for (let i = 0; i< expenses.length; i++) {
+    data.results.push(
+    createData(
+        expenses[i].id,
+        expenses[i].categoria.nome,
+        expenses[i].descricao,
+        formataData(expenses[i].data, true),
+        expenses[i].valor
+    )
+    )  
+  }
+};
+
+
 const mdTheme = createTheme();
 
 function ListOfExpenses() {
-    const [open, setOpen] = React.useState(true);
-    const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [npage, setNextPageUrl] = useState(true);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const page = parseInt(query.get('page') || '1', 10);
 
   useEffect(() => {
     setTimeout(() => {
@@ -134,11 +159,12 @@ function ListOfExpenses() {
     const toggleDrawer = () => {
     setOpen(!open);
   };
+
+    GetExpensesList();
+
     
-   GetExpensesList();
-  
     return (
- <>
+    <>
   <ThemeProvider theme={mdTheme}>
     {isLoading ? (
       <Loading />
@@ -180,25 +206,25 @@ function ListOfExpenses() {
                 </IconButton>
             </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
-            <Toolbar
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    px: [1],
-                }}
-            >
-                <IconButton onClick={toggleDrawer}>
-                    <ChevronLeftIcon />
-                </IconButton>
-            </Toolbar>
-            <Divider />
-            <List component="nav">
-                {mainListItems}
-                <Divider sx={{ my: 1 }} />
-            </List>
-        </Drawer>
+          <Drawer variant="permanent" open={open}>
+              <Toolbar
+                  sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      px: [1],
+                  }}
+              >
+                  <IconButton onClick={toggleDrawer}>
+                      <ChevronLeftIcon />
+                  </IconButton>
+              </Toolbar>
+              <Divider />
+              <List component="nav">
+                  {mainListItems}
+                  <Divider sx={{ my: 1 }} />
+              </List>
+          </Drawer>
         <Box
             component="main"
             sx={{
@@ -242,13 +268,7 @@ function ListOfExpenses() {
                                 </TableRow>
                               ))}
                             </TableBody>
-                            <Box
-                            sx={{
-                              marginTop: 5
-                            }}
-                            >
-                              <Pagination count={data.numberOfPages} variant="outlined" shape="rounded" />
-                            </Box></>
+                            </>
                             ) : (
                                 <TableBody>
                                     <TableRow>
@@ -259,6 +279,29 @@ function ListOfExpenses() {
                                 </TableBody>
                             )}
                         </Table>
+                        <Box
+                            sx={{
+                              marginTop: 5
+                            }}
+                            >
+                              <Pagination
+                                page={page} 
+                                count={data.numberOfPages} 
+                                variant="outlined" 
+                                shape="rounded"
+                                siblingCount={0} 
+                                renderItem={(item) => (
+                                  <PaginationItem 
+                                    component={Link}
+                                    to={`/expensesList${item.page === 1 ? '' : `?page=${item.page}`}`}
+                                    {...page !== 1 ? (
+                                      onclick=HandleNextPage()
+                                    ): onclick=''}
+                                    {...item}
+                                  />
+                                )}
+                              />
+                            </Box>
                     </Paper>
                 </Grid>
             </React.Fragment>

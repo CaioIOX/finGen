@@ -54,6 +54,12 @@ export const getExpenses = async () => {
     return response.data;
 };
 
+export const getNextPageExpenses = async (nextPageUrl) => {
+    const response = await axios.get(nextPageUrl, { headers: { Authorization: `Bearer ${token}` } });
+    return response.data;
+};
+  
+
 export const getOneExpense = async (expenseId) => {
     const response = await axios.get(`${API_BASE_URL}/depesas/${expenseId}`, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
