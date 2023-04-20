@@ -19,6 +19,7 @@ import Cookies from 'js-cookie';
 import Loading from '../components/Loading';
 import { userLogin, login } from '../services/api';
 import { Routes, Route } from 'react-router-dom';
+import { deepPurple } from '@mui/material/colors';
 import Dashboard from "../pages/dashboard";
 
 const theme = createTheme();
@@ -92,6 +93,14 @@ export default function SignIn() {
         </Routes>
     );
   };
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: deepPurple[500],
+      },
+    },
+  });
 
   return (
     

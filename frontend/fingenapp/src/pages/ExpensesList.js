@@ -128,13 +128,13 @@ export const HandleNextPage = async () => {
   }, []);
   for (let i = 0; i< expenses.length; i++) {
     data.results.push(
-    createData(
+      createData(
         expenses[i].id,
         expenses[i].categoria.nome,
         expenses[i].descricao,
         formataData(expenses[i].data, true),
         expenses[i].valor
-    )
+      )
     )  
   }
 };
@@ -145,7 +145,6 @@ const mdTheme = createTheme();
 function ListOfExpenses() {
   const [open, setOpen] = React.useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [npage, setNextPageUrl] = useState(true);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const page = parseInt(query.get('page') || '1', 10);
